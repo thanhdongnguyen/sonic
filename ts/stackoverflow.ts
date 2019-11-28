@@ -4,8 +4,13 @@ import Message from './libs/message'
 
 export default class Stackoverflow {
 
+    static order: string = "desc"
+    static sort: string = "activity"
+    static site: string = "stackoverflow"
+    static pagesize: number = 2
+
     static async search(text: string) {
-        const url = `https://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle=${text}&site=stackoverflow&pagesize=2`
+        const url = `https://api.stackexchange.com/2.2/search?order=${Stackoverflow.order}&sort=${Stackoverflow.sort}&intitle=${text}&site=${Stackoverflow.site}&pagesize=${Stackoverflow.pagesize}`
 
         const results: {
             success?: boolean,
