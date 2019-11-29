@@ -1,7 +1,7 @@
-import Telegraf from 'telegraf'
+import Telegraf, {ContextMessageUpdate} from 'telegraf'
 import Stackoverflow from './stackoverflow'
+import Message from './libs/message'
 import Text from './libs/text'
-import Display from './libs/display'
 
 import * as dotenv from 'dotenv'
 import * as path from 'path'
@@ -12,10 +12,10 @@ dotenv.config({path: path.join(__dirname, "..", '.env')})
 class Bot {
 
     async launch() {
-        const bot = new Telegraf(process.env.BOT_TOKEN)
+        const bot: Telegraf<ContextMessageUpdate> = new Telegraf(process.env.BOT_TOKEN)
         bot.catch((error, ctx) => {
             console.log(error)
-            ctx.reply("An error occurred during processing, please try again later")
+            ctx.reply(Message.error(500))
         })
         bot.start(this.botStart)
         bot.help(this.botHelp)
@@ -23,23 +23,22 @@ class Bot {
         bot.launch()
     }
 
-    botStart(ctx) {
-        ctx.reply("Welcome to Sonic Bot. Currently we only support searching on stackoverflow")
+    botStart(ctx: ContextMessageUpdate) {
+        ctx.reply(Message.error(100))
     }
-    botHelp(ctx) {
-        ctx.reply(`
-            Please enter text and waitting results
-        `)
+    botHelp(ctx: ContextMessageUpdate) {
+        ctx.reply(Message.error(101))
     }
 
-    async search(ctx) {
+    async search(ctx: ContextMessageUpdate): Promise<void> {
         const input = Text.parseInput(ctx.message.text)
 
         const results = await Stackoverflow.search(input)
         if (!results.success) {
-            ctx.reply("Sorry, search result not success, please try again")
+            ctx.reply(Message.error(102))
         }
-        ctx.replyWithMarkdown(Display.show(results.data))
+        ctx.replyWithMarkdown(Stackoverflow.show(results.data))
+        return
     }
 }
 
