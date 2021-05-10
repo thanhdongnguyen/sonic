@@ -24,7 +24,7 @@
     "@types/node": "^12.12.14",
     "axios": "^0.19.0",
     "dotenv": "^8.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "telegraf": "^3.33.3",
     "typescript": "^3.7.2"
   }
